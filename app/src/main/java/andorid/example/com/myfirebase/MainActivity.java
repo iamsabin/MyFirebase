@@ -15,6 +15,9 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +32,12 @@ public class MainActivity extends AppCompatActivity {
     private Button mSendButton;
     private ProgressBar mProgressBar;
 
+    private static final String ANONYMOUS = "Anonymous";
+
+    private String mUserName;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mDatabaseReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +50,12 @@ public class MainActivity extends AppCompatActivity {
         mPhotoImageButton = (ImageButton) findViewById(R.id.photo_picker_button);
         mSendButton = (Button) findViewById(R.id.send_button);
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
+
+        mUserName = ANONYMOUS;
+
+        // Firebase instance variables
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mDatabaseReference = mFirebaseDatabase.getReference().child("messages");
 
         // initialize listview and adapter
         List<Message> messages = new ArrayList<>();
@@ -85,6 +100,11 @@ public class MainActivity extends AppCompatActivity {
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Message message = new Message(mMessageEditText.getText().toString(),
+                        null,
+                        mUserName);
+
+                mDatabaseReference.push().setValue(message);
 
                 // clear message box
                 mMessageEditText.setText("");

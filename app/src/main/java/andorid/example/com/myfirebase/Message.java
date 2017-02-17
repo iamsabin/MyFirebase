@@ -9,6 +9,10 @@ public class Message {
     private String photoUrl;
     private String name;
 
+    public Message() {
+
+    }
+
     public Message(String text, String photoUrl, String name) {
         this.text = text;
         this.photoUrl = photoUrl;
